@@ -11,18 +11,18 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 🔧 Register Repositories
+//  Register Repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IEventRepository, EventRepository>();
 builder.Services.AddScoped<IParticipantEventRepository, ParticipantEventRepository>();
 builder.Services.AddScoped<ISessionInfoRepository, SessionInfoRepository>();
 builder.Services.AddScoped<ISpeakersRepository, SpeakersRepository>();
 
-// 🔧 Configure EF Core with SQL Server
+// Configure EF Core with SQL Server
 builder.Services.AddDbContext<EventDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// 🔐 JWT Authentication configuration
+// JWT Authentication configuration
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
 var secretKey = jwtSettings["SecretKey"];
 
@@ -43,7 +43,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 
-// 🌐 CORS policy to allow all origins
+//  CORS policy to allow all origins
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
@@ -54,7 +54,7 @@ builder.Services.AddCors(options =>
     });
 });
 
-// 📦 MVC and Swagger integration
+//  MVC and Swagger integration
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -66,7 +66,7 @@ builder.Services.AddSwaggerGen(options =>
         Description = "API for managing events, users, and sessions"
     });
 
-    // 🔐 Swagger JWT token support
+    //  Swagger JWT token support
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name = "Authorization",
@@ -97,7 +97,7 @@ builder.Services.AddSwaggerGen(options =>
 
 var app = builder.Build();
 
-// 🔁 Enable Swagger
+// Enable Swagger
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
