@@ -1,0 +1,124 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"] - EventManagementFrontend</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            padding:  0;
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: #007bff !important;
+        }
+
+        .nav-link {
+            font-size: 1rem;
+            margin-left: 1rem;
+        }
+
+        .nav-link:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            background-color: #b5c8da;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: auto; /* This ensures the footer is pushed down */
+            box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .container {
+            margin-top: 1rem;
+            flex-grow: 1; /* This allows the content area to grow and fill the available space */
+        }
+    </style>
+</head>
+<body>
+    @{
+        var userRole = ViewBag.UserRole as string ?? "";
+        string homeUrl = userRole switch
+        {
+            "Admin" => Url.Action("Index", "Admin"),
+            "Participant" => Url.Action("Index", "Participant"),
+            _ => Url.Action("Index", "Login")
+        };
+    }
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+    <div class="container">
+        <a class="navbar-brand" href="@homeUrl">EventManagement</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto align-items-center">
+                <li class="nav-item">
+                    <a class="nav-link" href="@homeUrl"><i class="fas fa-home me-1"></i> Home</a>
+                </li>
+
+                @if (userRole == "Admin")
+                {
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("ManageSessions", "Admin")"><i class="fas fa-clock me-1"></i> Sessions</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("EventPage", "Admin")"><i class="fas fa-calendar-alt me-1"></i> Events</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Admin" asp-action="Speakers"><i class="fas fa-microphone me-1"></i> Speakers</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("ManageUSers", "Admin")"><i class="fas fa-users me-1"></i> Users</a>
+                    </li>
+                }
+                else if (userRole == "Participant")
+                {
+
+                    <li class="nav-item">
+                       <a asp-controller="Participant" asp-action="ParticipantEvents">Events</a>
+                    </li>
+                    <li class="nav-item">
+                       <a asp-controller="Participant" asp-action="Session">Sessions</a>
+                    </li>
+                }
+
+                @if (userRole == "Admin" || userRole == "Participant")
+                {
+                    <li class="nav-item">
+                        <a class="nav-link text-danger" href="@Url.Action("Logout", "Login")">
+                            <i class="fas fa-sign-out-alt me-1"></i> Logout
+                        </a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+    <div class="container">
+        @RenderBody()
+    </div>
+
+    <footer style="margin-top: 20px;">
+        <p class="mb-0">&copy; 2025 - Event Management. All rights reserved.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

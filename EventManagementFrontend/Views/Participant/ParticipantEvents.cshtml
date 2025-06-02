@@ -1,0 +1,134 @@
+@model IEnumerable<EventManagement.Model.EventDetails>
+@using EventManagement.Model
+@using System.Linq
+
+@{
+    ViewData["Title"] = "Participant - Events";
+    var sessions = ViewBag.Sessions as List<SessionInfo>;
+    var registrations = ViewBag.Registrations as List<ParticipantEventDetails>;
+    var userEmail = ViewBag.UserEmail as string;
+    string message = ViewBag.Message as string;
+    string error = ViewBag.Error as string;
+}
+
+<div class="container my-5">
+    <h2 class="text-center text-primary mb-4"><i class="fas fa-calendar-alt me-2"></i>Explore Events</h2>
+
+    @if (!string.IsNullOrEmpty(message))
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @message
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(error))
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @error
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <!-- Events Section -->
+    <div class="card shadow-sm mb-5 rounded-4">
+        <div class="card-header bg-light">
+            <h4 class="mb-0 text-dark"><i class="fas fa-calendar-check me-2"></i>Available Events</h4>
+        </div>
+        <div class="card-body p-4">
+            <div class="table-responsive">
+                <table class="table table-hover table-striped align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th scope="col">Event ID</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var evt in Model)
+                        {
+                            var isRegistered = registrations?.Any(r => r.EventId == evt.EventId && r.ParticipantEmailId == userEmail) ?? false;
+                            <tr>
+                                <td>@evt.EventId</td>
+                                <td>@evt.EventName</td>
+                                <td>@evt.EventDate.ToString("dd MMM yyyy")</td>
+                                <td>
+                                    @if (isRegistered)
+                                    {
+                                        <span class="badge bg-success">Registered</span>
+                                    }
+                                    else
+                                    {
+                                        <a asp-action="Register" asp-route-eventId="@evt.EventId" class="btn btn-outline-primary btn-sm">
+                                            <i class="fas fa-sign-in-alt me-1"></i> Register
+                                        </a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sessions Section -->
+    <div class="card shadow-sm rounded-4">
+        <div class="card-header bg-light">
+            <h4 class="mb-0 text-dark"><i class="fas fa-chalkboard-teacher me-2"></i>Upcoming Sessions</h4>
+        </div>
+        <div class="card-body p-4">
+            @if (sessions != null && sessions.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped align-middle">
+                        <thead class="table-secondary">
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Title</th>
+                                <th scope="col">Description</th>
+                                <th scope="col">Start</th>
+                                <th scope="col">End</th>
+                                <th scope="col">Event</th>
+                                <th scope="col">Speaker</th>
+                                <th scope="col">Join Link</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var session in sessions)
+                            {
+                                <tr>
+                                    <td>@session.SessionId</td>
+                                    <td>@session.SessionTitle</td>
+                                    <td>@session.Description</td>
+                                    <td>@session.SessionStart.ToString("g")</td>
+                                    <td>@session.SessionEnd.ToString("g")</td>
+                                    <td>@session.EventId</td>
+                                    <td>@(session.Speaker?.SpeakerName ?? "N/A")</td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(session.SessionUrl))
+                                        {
+                                            <a href="@session.SessionUrl" target="_blank" class="btn btn-sm btn-outline-success">
+                                                <i class="fas fa-video me-1"></i>Join
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">N/A</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <p class="text-muted">No sessions available at the moment.</p>
+            }
+        </div>
+    </div>
+</div>

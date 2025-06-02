@@ -1,0 +1,157 @@
+@model EventManagement.Model.SessionInfo
+
+@{
+    ViewData["Title"] = "Edit Session";
+    var events = ViewBag.Events as List<SelectListItem>;
+    var speakers = ViewBag.Speakers as List<SelectListItem>;
+}
+
+<style>
+    .form-section {
+        background-color: #a7c3df;
+        border-bottom-left-radius: 12px;
+        border-bottom-right-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 0 15px rgba(0,0,0,0.05);
+    }
+
+    .form-label {
+        font-weight: 600;
+    }
+
+    .form-control, .form-select, textarea {
+        border-radius: 8px;
+    }
+
+    .card-header-custom {
+        background: linear-gradient(135deg, #4e5860, #6c7a80);
+        color: #fff;
+        padding: 1rem 1.5rem;
+        border-radius: 10px 10px 0 0;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border: none;
+        padding: 0.6rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 500;
+        font-size: 1rem;
+    }
+
+    .btn-primary i {
+        margin-right: 0.5rem;
+    }
+
+    .btn-outline-secondary {
+        border-radius: 8px;
+        font-weight: 500;
+        padding: 0.6rem 1.5rem;
+    }
+
+    .btn-outline-secondary i {
+        margin-right: 0.5rem;
+    }
+
+    .text-danger {
+        font-size: 0.85rem;
+    }
+
+    .card {
+        border: none;
+    }
+</style>
+
+<div class="container mt-5">
+    <div class="card shadow-lg">
+        <div class="card-header-custom">
+            <h4 class="mb-0">
+                <i class="fas fa-edit me-2"></i> Edit Session
+            </h4>
+        </div>
+        <div class="card-body form-section">
+            <form asp-action="EditSession" method="post" novalidate>
+                <input type="hidden" asp-for="SessionId" />
+
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <label asp-for="SessionTitle" class="form-label">Session Title</label>
+                        <input asp-for="SessionTitle" class="form-control" placeholder="Enter session title" />
+                        <span asp-validation-for="SessionTitle" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="SessionUrl" class="form-label">Session URL</label>
+                        <input asp-for="SessionUrl" class="form-control" placeholder="https://example.com/session-link" />
+                        <span asp-validation-for="SessionUrl" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <label asp-for="EventId" class="form-label">Event</label>
+                        @if (events != null && events.Any())
+                        {
+                            <select asp-for="EventId" class="form-select" asp-items="events">
+                                <option value="">-- Select Event --</option>
+                            </select>
+                        }
+                        else
+                        {
+                            <input asp-for="EventId" class="form-control" placeholder="Enter Event ID" />
+                        }
+                        <span asp-validation-for="EventId" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="SpeakerId" class="form-label">Speaker</label>
+                        @if (speakers != null && speakers.Any())
+                        {
+                            <select asp-for="SpeakerId" class="form-select" asp-items="speakers">
+                                <option value="">-- Select Speaker --</option>
+                            </select>
+                        }
+                        else
+                        {
+                            <input asp-for="SpeakerId" class="form-control" placeholder="Enter Speaker ID" />
+                        }
+                        <span asp-validation-for="SpeakerId" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <label asp-for="SessionStart" class="form-label">Session Start</label>
+                        <input asp-for="SessionStart" type="datetime-local" class="form-control" />
+                        <span asp-validation-for="SessionStart" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="SessionEnd" class="form-label">Session End</label>
+                        <input asp-for="SessionEnd" type="datetime-local" class="form-control" />
+                        <span asp-validation-for="SessionEnd" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="Description" class="form-label">Description</label>
+                    <textarea asp-for="Description" class="form-control" rows="4" placeholder="Optional description..."></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+                <div class="text-end">
+                    <button type="submit" class="btn btn-primary me-2">
+                        <i class="fas fa-save"></i> Update
+                    </button>
+                    <a asp-action="Index" class="btn btn-outline-secondary">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

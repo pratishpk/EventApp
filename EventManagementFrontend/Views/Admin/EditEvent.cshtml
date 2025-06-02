@@ -1,0 +1,124 @@
+@model EventManagement.Model.EventDetails
+
+@{
+    ViewData["Title"] = "Edit Event";
+}
+
+<style>
+    .form-section {
+        background-color: #a7c3df;
+        border-bottom-left-radius: 12px;
+        border-bottom-right-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 0 15px rgba(0,0,0,0.05);
+    }
+
+    .form-label {
+        font-weight: 600;
+    }
+
+    .form-control, .form-select, textarea {
+        border-radius: 8px;
+    }
+
+    .card-header-custom {
+        background: linear-gradient(135deg, #4e5860, #6c7a80);
+        color: #fff;
+        padding: 1rem 1.5rem;
+        border-radius: 10px 10px 0 0;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border: none;
+        padding: 0.6rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 500;
+        font-size: 1rem;
+    }
+
+    .btn-outline-secondary {
+        padding: 0.6rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 500;
+        font-size: 1rem;
+    }
+
+    .btn-primary i, .btn-outline-secondary i {
+        margin-right: 0.5rem;
+    }
+
+    .text-danger {
+        font-size: 0.85rem;
+    }
+
+    .card {
+        border: none;
+    }
+</style>
+
+<div class="container mt-5">
+    <div class="card shadow-lg">
+        <div class="card-header-custom">
+            <h4 class="mb-0">
+                <i class="fas fa-calendar-edit me-2"></i> Edit Event
+            </h4>
+        </div>
+        <div class="card-body form-section">
+            <form asp-action="EditEvent" method="post" novalidate>
+                <input type="hidden" asp-for="EventId" />
+
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <label asp-for="EventName" class="form-label">Event Name</label>
+                        <input asp-for="EventName" class="form-control" placeholder="Enter event name" />
+                        <span asp-validation-for="EventName" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="EventCategory" class="form-label">Category</label>
+                        <input asp-for="EventCategory" class="form-control" placeholder="e.g. Technology, Health" />
+                        <span asp-validation-for="EventCategory" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <label asp-for="EventDate" class="form-label">Event Date</label>
+                        <input asp-for="EventDate" type="date" class="form-control" />
+                        <span asp-validation-for="EventDate" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Status" class="form-label">Status</label>
+                        <select asp-for="Status" class="form-select">
+                            <option value="">-- Select Status --</option>
+                            <option value="Active">Active</option>
+                            <option value="In-Active">In-Active</option>
+                        </select>
+                        <span asp-validation-for="Status" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="Description" class="form-label">Description</label>
+                    <textarea asp-for="Description" class="form-control" rows="4" placeholder="Add a short description about the event"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary me-3">
+                        <i class="fas fa-save"></i> Save
+                    </button>
+                    <a asp-action="Index" class="btn btn-outline-secondary" style="background-color: gray; color:white;">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

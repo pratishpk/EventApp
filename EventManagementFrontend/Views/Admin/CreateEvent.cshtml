@@ -1,0 +1,111 @@
+@model EventManagement.Model.EventDetails
+
+@{
+    ViewData["Title"] = "Create Event";
+}
+
+<style>
+    .form-section {
+        background-color: #a7c3df;
+        border-bottom-left-radius: 12px;
+        border-bottom-right-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 0 15px rgba(0,0,0,0.05);
+    }
+
+    .form-label {
+        font-weight: 600;
+    }
+
+    .form-control, .form-select, textarea {
+        border-radius: 8px;
+    }
+
+    .card-header-custom {
+        background: linear-gradient(135deg, #4e5860, #6c7a80);
+        color: #fff;
+        padding: 1rem 1.5rem;
+        border-radius: 10px 10px 0 0;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border: none;
+        padding: 0.6rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 500;
+        font-size: 1rem;
+    }
+
+    .btn-primary i {
+        margin-right: 0.5rem;
+    }
+
+    .text-danger {
+        font-size: 0.85rem;
+    }
+
+    .card {
+        border: none;
+    }
+
+</style>
+
+<div class="container mt-5">
+    <div class="card shadow-lg">
+        <div class="card-header-custom">
+            <h4 class="mb-0">
+                <i class="fas fa-calendar-plus me-2"></i> Create New Event
+            </h4>
+        </div>
+        <div class="card-body form-section">
+            <form asp-action="CreateEvent" method="post" class="needs-validation" novalidate>
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <label asp-for="EventName" class="form-label"></label>
+                        <input asp-for="EventName" class="form-control" placeholder="Enter event name" />
+                        <span asp-validation-for="EventName" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="EventCategory" class="form-label"></label>
+                        <input asp-for="EventCategory" class="form-control" placeholder="e.g. Technology, Health" />
+                        <span asp-validation-for="EventCategory" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <label asp-for="EventDate" class="form-label"></label>
+                        <input asp-for="EventDate" type="date" class="form-control" />
+                        <span asp-validation-for="EventDate" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Status" class="form-label"></label>
+                        <select asp-for="Status" class="form-select">
+                            <option value="">-- Select Status --</option>
+                            <option value="Active">Active</option>
+                            <option value="In-Active">In-Active</option>
+                        </select>
+                        <span asp-validation-for="Status" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="Description" class="form-label"></label>
+                    <textarea asp-for="Description" rows="4" class="form-control" placeholder="Add a short description about the event"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+                <div class="text-end">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-plus-circle"></i> Create Event
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

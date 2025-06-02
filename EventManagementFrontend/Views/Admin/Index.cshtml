@@ -1,0 +1,197 @@
+@model IEnumerable<EventManagement.Model.EventDetails>
+@using EventManagement.Model
+
+@{
+    ViewData["Title"] = "Admin Dashboard";
+    var sessions = ViewBag.Sessions as List<SessionInfo>;
+    var speakers = ViewBag.Speakers as List<SpeakersDetails>;
+}
+
+<style>
+    .no-border th,
+    .no-border td,
+    .no-border {
+        border: none !important;
+    }
+
+    .table-section {
+        background-color: #818e92;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .table-section h4 {
+        font-weight: 600;
+        margin-bottom: 0;
+    }
+
+    .table-header {
+        background-color: #343a40;
+        color: white;
+    }
+
+    .btn-add {
+        font-size: 0.875rem;
+    }
+
+    .badge {
+        font-size: 0.85rem;
+    }
+
+    .card + .card {
+        margin-top: 2rem;
+    }
+</style>
+
+<div class="container py-4" style="background-color:#c7dff1; border-radius: 10px;">
+
+    <!-- Events Section -->
+    <div class="card shadow-sm table-section">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h4>Events</h4>
+            <a href="@Url.Action("CreateEvent", "Admin")" class="btn btn-success btn-sm btn-add">
+                <i class="fas fa-plus"></i> Add Event
+            </a>
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-hover no-border mb-0">
+                <thead class="table-header">
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Date</th>
+                        <th>Category</th>
+                        <th>Status</th>
+                        <th style="width: 150px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var evt in Model)
+                    {
+                        <tr>
+                            <td>@evt.EventId</td>
+                            <td>@evt.EventName</td>
+                            <td>@evt.EventDate.ToString("yyyy-MM-dd")</td>
+                            <td>@evt.EventCategory</td>
+                            <td>
+                                <span class="badge bg-@(evt.Status == "Active" ? "success" : "secondary")">
+                                    @evt.Status
+                                </span>
+                            </td>
+                            <td>
+                                <a href="@Url.Action("EditEvent", "Admin", new { id = evt.EventId })" class="btn btn-sm btn-primary me-1">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="@Url.Action("DeleteEvent", "Admin", new { id = evt.EventId })" class="btn btn-sm btn-danger">
+                                    <i class="fas fa-trash-alt"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Sessions Section -->
+    <div class="card shadow-sm table-section">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h4>Sessions</h4>
+            <a href="@Url.Action("CreateSession", "Admin")" class="btn btn-success btn-sm btn-add">
+                <i class="fas fa-plus"></i> Add Session
+            </a>
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-hover no-border mb-0">
+                <thead class="table-header">
+                    <tr>
+                        <th>Id</th>
+                        <th>Title</th>
+                        <th>Start</th>
+                        <th>End</th>
+                        <th>Event</th>
+                        <th>Speaker</th>
+                        <th style="width: 150px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (sessions?.Any() == true)
+                    {
+                        foreach (var session in sessions)
+                        {
+                            <tr>
+                                <td>@session.SessionId</td>
+                                <td>@session.SessionTitle</td>
+                                <td>@session.SessionStart.ToShortTimeString()</td>
+                                <td>@session.SessionEnd.ToShortTimeString()</td>
+                                <td>@session.EventId</td>
+                                <td>@session.Speaker?.SpeakerName</td>
+                                <td>
+                                    <a href="@Url.Action("EditSession", "Admin", new { id = session.SessionId })" class="btn btn-sm btn-primary me-1">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="@Url.Action("DeleteSession", "Admin", new { id = session.SessionId })" class="btn btn-sm btn-danger">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="7" class="text-center text-muted">No sessions found.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Speakers Section -->
+    <div class="card shadow-sm table-section">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h4>Speakers</h4>
+            <a href="@Url.Action("CreateSpeaker", "Admin")" class="btn btn-success btn-sm btn-add">
+                <i class="fas fa-plus"></i> Add Speaker
+            </a>
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-hover no-border mb-0">
+                <thead class="table-header">
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th style="width: 150px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (speakers?.Any() == true)
+                    {
+                        foreach (var speaker in speakers)
+                        {
+                            <tr>
+                                <td>@speaker.SpeakerId</td>
+                                <td>@speaker.SpeakerName</td>
+                                <td>
+                                    <a href="@Url.Action("EditSpeaker", "Admin", new { id = speaker.SpeakerId })" class="btn btn-sm btn-primary me-1">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="@Url.Action("DeleteSpeaker", "Admin", new { id = speaker.SpeakerId })" class="btn btn-sm btn-danger">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="3" class="text-center text-muted">No speakers found.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
